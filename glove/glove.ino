@@ -14,6 +14,11 @@ BLEService gloveService("fff0");  // User defined service
 BLEIntCharacteristic gloveCharacteristic("ccc0",  // standard 16-bit characteristic UUID
     BLERead | BLENotify); // remote clients will only be able to read this
 
+BLEIntCharacteristic finger1("ccc1", BLERead | BLENotify);
+BLEIntCharacteristic finger2("ccc2", BLERead | BLENotify);
+BLEIntCharacteristic finger3("ccc3", BLERead | BLENotify);
+BLEIntCharacteristic finger4("ccc4", BLERead | BLENotify);
+
 void setup() {
   Serial.begin(9600);    // initialize serial communication
   while (!Serial);
@@ -28,8 +33,11 @@ void setup() {
   BLE.setLocalName("Nano33BLE");  // Set name for connection
   BLE.setAdvertisedService(gloveService); // Advertise service
   gloveService.addCharacteristic(gloveCharacteristic); // Add characteristic to service
+  gloveService.addCharacteristic(finger1);
+  gloveService.addCharacteristic(finger2);
+  gloveService.addCharacteristic(finger3);
+  gloveService.addCharacteristic(finger4);
   BLE.addService(gloveService); // Add service
-  gloveCharacteristic.setValue(0); // Set greeting string
 
   BLE.advertise();  // Start advertising
   Serial.print("Peripheral device MAC: ");
