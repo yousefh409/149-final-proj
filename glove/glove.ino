@@ -9,12 +9,10 @@
 
 #include <ArduinoBLE.h>
 
-static const char* greeting = "Hello World!";
+BLEService gloveService("fff0");  // User defined service
 
-BLEService greetingService("180C");  // User defined service
-
-BLEStringCharacteristic greetingCharacteristic("2A56",  // standard 16-bit characteristic UUID
-    BLERead, 13); // remote clients will only be able to read this
+BLEIntCharacteristic gloveCharacteristic("ccc0",  // standard 16-bit characteristic UUID
+    BLERead | BLENotify); // remote clients will only be able to read this
 
 void setup() {
   Serial.begin(9600);    // initialize serial communication
@@ -28,10 +26,10 @@ void setup() {
   }
 
   BLE.setLocalName("Nano33BLE");  // Set name for connection
-  BLE.setAdvertisedService(greetingService); // Advertise service
-  greetingService.addCharacteristic(greetingCharacteristic); // Add characteristic to service
-  BLE.addService(greetingService); // Add service
-  greetingCharacteristic.setValue(greeting); // Set greeting string
+  BLE.setAdvertisedService(gloveService); // Advertise service
+  gloveService.addCharacteristic(gloveCharacteristic); // Add characteristic to service
+  BLE.addService(gloveService); // Add service
+  gloveCharacteristic.setValue(0); // Set greeting string
 
   BLE.advertise();  // Start advertising
   Serial.print("Peripheral device MAC: ");
@@ -50,7 +48,12 @@ void loop() {
     // turn on the LED to indicate the connection:
     digitalWrite(LED_BUILTIN, HIGH);
 
-    while (central.connected()){} // keep looping while connected
+    int count = 0;
+    while (central.connected()){
+      delay(250);
+      gloveCharacteristic.setValue(count);
+      count += 1;
+    } // keep looping while connected
     
     // when the central disconnects, turn off the LED:
     digitalWrite(LED_BUILTIN, LOW);
