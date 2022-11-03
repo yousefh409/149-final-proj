@@ -10,35 +10,43 @@
 #include <ArduinoBLE.h>
 #include <Wire.h>
 #include <LSM303.h>
+#include <L3G.h>
 
-const int flexPin = A0;
-
+L3G gyro;
 LSM303 compass;
-char report[80];
 
 BLEService gloveService("fff0");  // User defined service
 
-BLEIntCharacteristic gloveCharacteristic("ccc0",  // standard 16-bit characteristic UUID
-    BLERead | BLENotify); // remote clients will only be able to read this
-
+BLEIntCharacteristic finger0("ccc0", BLERead | BLENotify);
 BLEIntCharacteristic finger1("ccc1", BLERead | BLENotify);
 BLEIntCharacteristic finger2("ccc2", BLERead | BLENotify);
 BLEIntCharacteristic finger3("ccc3", BLERead | BLENotify);
-BLEIntCharacteristic finger4("ccc4", BLERead | BLENotify);
 
 BLEIntCharacteristic accelx("aaa1", BLERead | BLENotify);
 BLEIntCharacteristic accely("aaa2", BLERead | BLENotify);
 BLEIntCharacteristic accelz("aaa3", BLERead | BLENotify);
 
+BLEIntCharacteristic gyrox("bbb1", BLERead | BLENotify);
+BLEIntCharacteristic gyroy("bbb2", BLERead | BLENotify);
+BLEIntCharacteristic gyroz("bbb3", BLERead | BLENotify);
+
 void setup() {
   Serial.begin(9600);    // initialize serial communication
+  pinMode(LED_BUILTIN, OUTPUT); // initialize the built-in LED pin
   while (!Serial);
 
   Wire.begin();
-  compass.init();
+  if (!compass.init()) {
+    Serial.println("Failed to connect compass!");
+    while (1);
+  }
   compass.enableDefault();
 
-  pinMode(LED_BUILTIN, OUTPUT); // initialize the built-in LED pin
+  if (!gyro.init()) {
+    Serial.println("Failed to autodetect gyro type!");
+    while (1);
+  }
+  gyro.enableDefault();
 
   if (!BLE.begin()) {   // initialize BLE
     Serial.println("starting BLE failed!");
@@ -47,21 +55,50 @@ void setup() {
 
   BLE.setLocalName("Nano33BLE");  // Set name for connection
   BLE.setAdvertisedService(gloveService); // Advertise service
-  gloveService.addCharacteristic(gloveCharacteristic); // Add characteristic to service
+  gloveService.addCharacteristic(finger0);
   gloveService.addCharacteristic(finger1);
   gloveService.addCharacteristic(finger2);
   gloveService.addCharacteristic(finger3);
-  gloveService.addCharacteristic(finger4);
-
   gloveService.addCharacteristic(accelx);
   gloveService.addCharacteristic(accely);
   gloveService.addCharacteristic(accelz);
+  gloveService.addCharacteristic(gyrox);
+  gloveService.addCharacteristic(gyroy);
+  gloveService.addCharacteristic(gyroz);
   BLE.addService(gloveService); // Add service
 
   BLE.advertise();  // Start advertising
   Serial.print("Peripheral device MAC: ");
   Serial.println(BLE.address());
   Serial.println("Waiting for connections...");
+}
+
+void read_compass() {
+  compass.read();
+  accelx.setValue(int(compass.a.x));
+  accely.setValue(int(compass.a.y));
+  accelz.setValue(int(compass.a.z));
+  Serial.println("Ax: "+String(compass.a.x)+", Ay: "+String(compass.a.y)+", Az: "+String(compass.a.z));
+}
+
+void read_flex() {
+  int flex0 = analogRead(A0);
+  int flex1 = analogRead(A1);
+  int flex2 = analogRead(A2);
+  int flex3 = analogRead(A3);
+  finger0.setValue(flex0);
+  finger1.setValue(flex1);
+  finger2.setValue(flex2);
+  finger3.setValue(flex3);
+  Serial.println("flex0: "+String(flex0)+", flex1: "+String(flex1)+", flex2: "+String(flex2)+", flex3: "+String(flex3));
+}
+
+void read_gyro() {
+  gyro.read();
+  gyrox.setValue(int(gyro.g.x));
+  gyroy.setValue(int(gyro.g.y));
+  gyroz.setValue(int(gyro.g.z));
+  Serial.println("Gx: "+String(gyro.g.x)+", Gy: "+String(gyro.g.y)+", Gz: "+String(gyro.g.z));
 }
 
 void loop() {
@@ -78,23 +115,10 @@ void loop() {
     int count = 0;
     while (central.connected()){
       delay(250);
-      Serial.println("precompass read");
-      compass.read();
-      Serial.println("postcompass read");
-      accelx.setValue(int(compass.a.x));
-      accely.setValue(int(compass.a.y));
-      accelz.setValue(int(compass.a.z));
-      snprintf(report, sizeof(report), "A: %6d %6d %6d    M: %6d %6d %6d",
-          compass.a.x, compass.a.y, compass.a.z,
-          compass.m.x, compass.m.y, compass.m.z);
-      Serial.println(report);
 
-      int flex = analogRead(flexPin);
-      Serial.println(flex);
-      finger1.setValue(int(flex));
-
-      gloveCharacteristic.setValue(count);
-      count += 1;
+      read_compass();
+      read_gyro();
+      read_flex();
     } // keep looping while connected
     
     // when the central disconnects, turn off the LED:
