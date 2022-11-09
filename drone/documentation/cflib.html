@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package cflib</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>cflib</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/__init__.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/__init__.py</a></font></td></tr></table>
+    <p><tt>The&nbsp;Crazyflie&nbsp;Micro&nbsp;Quadcopter&nbsp;library&nbsp;API&nbsp;used&nbsp;to&nbsp;communicate&nbsp;with&nbsp;the<br>
+Crazyflie&nbsp;Micro&nbsp;Quadcopter&nbsp;via&nbsp;a&nbsp;communication&nbsp;link.<br>
+&nbsp;<br>
+The&nbsp;API&nbsp;takes&nbsp;care&nbsp;of&nbsp;scanning,&nbsp;opening&nbsp;and&nbsp;closing&nbsp;the&nbsp;communication&nbsp;link<br>
+as&nbsp;well&nbsp;as&nbsp;sending/receiving&nbsp;data&nbsp;from&nbsp;the&nbsp;Crazyflie.<br>
+&nbsp;<br>
+A&nbsp;link&nbsp;is&nbsp;described&nbsp;using&nbsp;an&nbsp;URI&nbsp;of&nbsp;the&nbsp;following&nbsp;format:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;interface&gt;://&lt;interface&nbsp;defined&nbsp;data&gt;.<br>
+See&nbsp;each&nbsp;link&nbsp;for&nbsp;the&nbsp;data&nbsp;that&nbsp;can&nbsp;be&nbsp;included&nbsp;in&nbsp;the&nbsp;URI&nbsp;for&nbsp;that&nbsp;interface.<br>
+&nbsp;<br>
+The&nbsp;two&nbsp;main&nbsp;uses-cases&nbsp;are&nbsp;scanning&nbsp;for&nbsp;Crazyflies&nbsp;available&nbsp;on&nbsp;a<br>
+communication&nbsp;link&nbsp;and&nbsp;opening&nbsp;a&nbsp;communication&nbsp;link&nbsp;to&nbsp;a&nbsp;Crazyflie.<br>
+&nbsp;<br>
+Example&nbsp;of&nbsp;scanning&nbsp;for&nbsp;available&nbsp;Crazyflies&nbsp;on&nbsp;all&nbsp;communication&nbsp;links:<br>
+cflib.crtp.init_drivers()<br>
+available&nbsp;=&nbsp;cflib.crtp.scan_interfaces()<br>
+for&nbsp;i&nbsp;in&nbsp;available:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"Found&nbsp;Crazyflie&nbsp;on&nbsp;URI&nbsp;[%s]&nbsp;with&nbsp;comment&nbsp;[%s]"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;(available[0],&nbsp;available[1])<br>
+&nbsp;<br>
+Example&nbsp;of&nbsp;connecting&nbsp;to&nbsp;a&nbsp;Crazyflie&nbsp;with&nbsp;know&nbsp;URI&nbsp;(radio&nbsp;dongle&nbsp;0&nbsp;and<br>
+radio&nbsp;channel&nbsp;125):<br>
+cf&nbsp;=&nbsp;Crazyflie()<br>
+cf.open_link("radio://0/125")<br>
+...<br>
+cf.close_link()</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cflib.bootloader.html"><strong>bootloader</strong>&nbsp;(package)</a><br>
+<a href="cflib.crazyflie.html"><strong>crazyflie</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top><a href="cflib.crtp.html"><strong>crtp</strong>&nbsp;(package)</a><br>
+<a href="cflib.drivers.html"><strong>drivers</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top><a href="cflib.utils.html"><strong>utils</strong>&nbsp;(package)</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table>
+</body></html>

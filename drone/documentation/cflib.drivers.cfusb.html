@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cflib.drivers.cfusb</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cflib.html"><font color="#ffffff">cflib</font></a>.<a href="cflib.drivers.html"><font color="#ffffff">drivers</font></a>.cfusb</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/drivers/cfusb.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/drivers/cfusb.py</a></font></td></tr></table>
+    <p><tt>USB&nbsp;driver&nbsp;for&nbsp;the&nbsp;Crazyflie.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="usb.html">usb</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cflib.drivers.cfusb.html#CfUsb">CfUsb</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CfUsb">class <strong>CfUsb</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Used&nbsp;for&nbsp;communication&nbsp;with&nbsp;the&nbsp;Crazyradio&nbsp;USB&nbsp;dongle<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CfUsb-__init__"><strong>__init__</strong></a>(self, device=None, devid=0)</dt><dd><tt>Create&nbsp;<a href="builtins.html#object">object</a>&nbsp;and&nbsp;scan&nbsp;for&nbsp;USB&nbsp;dongle&nbsp;if&nbsp;no&nbsp;device&nbsp;is&nbsp;supplied</tt></dd></dl>
+
+<dl><dt><a name="CfUsb-close"><strong>close</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CfUsb-get_serial"><strong>get_serial</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CfUsb-receive_packet"><strong>receive_packet</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CfUsb-scan"><strong>scan</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CfUsb-send_packet"><strong>send_packet</strong></a>(self, dataOut)</dt><dd><tt>Send&nbsp;a&nbsp;packet&nbsp;and&nbsp;receive&nbsp;the&nbsp;ack&nbsp;from&nbsp;the&nbsp;radio&nbsp;dongle<br>
+The&nbsp;ack&nbsp;contains&nbsp;information&nbsp;about&nbsp;the&nbsp;packet&nbsp;transmition<br>
+and&nbsp;a&nbsp;data&nbsp;payload&nbsp;if&nbsp;the&nbsp;ack&nbsp;packet&nbsp;contained&nbsp;any</tt></dd></dl>
+
+<dl><dt><a name="CfUsb-set_crtp_to_usb"><strong>set_crtp_to_usb</strong></a>(self, crtp_to_usb)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['CfUsb']</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Bitcraze&nbsp;AB</td></tr></table>
+</body></html>
