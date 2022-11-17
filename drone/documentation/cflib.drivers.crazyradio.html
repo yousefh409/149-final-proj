@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cflib.drivers.crazyradio</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cflib.html"><font color="#ffffff">cflib</font></a>.<a href="cflib.drivers.html"><font color="#ffffff">drivers</font></a>.crazyradio</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/drivers/crazyradio.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/drivers/crazyradio.py</a></font></td></tr></table>
+    <p><tt>USB&nbsp;driver&nbsp;for&nbsp;the&nbsp;<a href="#Crazyradio">Crazyradio</a>&nbsp;USB&nbsp;dongle.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="usb.html">usb</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cflib.drivers.crazyradio.html#Crazyradio">Crazyradio</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Crazyradio">class <strong>Crazyradio</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Used&nbsp;for&nbsp;communication&nbsp;with&nbsp;the&nbsp;<a href="#Crazyradio">Crazyradio</a>&nbsp;USB&nbsp;dongle<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Crazyradio-__init__"><strong>__init__</strong></a>(self, device=None, devid=0)</dt><dd><tt>Create&nbsp;<a href="builtins.html#object">object</a>&nbsp;and&nbsp;scan&nbsp;for&nbsp;USB&nbsp;dongle&nbsp;if&nbsp;no&nbsp;device&nbsp;is&nbsp;supplied</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-close"><strong>close</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Crazyradio-scan_channels"><strong>scan_channels</strong></a>(self, start, stop, packet)</dt></dl>
+
+<dl><dt><a name="Crazyradio-scan_selected"><strong>scan_selected</strong></a>(self, selected, packet)</dt></dl>
+
+<dl><dt><a name="Crazyradio-send_packet"><strong>send_packet</strong></a>(self, dataOut)</dt><dd><tt>Send&nbsp;a&nbsp;packet&nbsp;and&nbsp;receive&nbsp;the&nbsp;ack&nbsp;from&nbsp;the&nbsp;radio&nbsp;dongle<br>
+The&nbsp;ack&nbsp;contains&nbsp;information&nbsp;about&nbsp;the&nbsp;packet&nbsp;transmition<br>
+and&nbsp;a&nbsp;data&nbsp;payload&nbsp;if&nbsp;the&nbsp;ack&nbsp;packet&nbsp;contained&nbsp;any</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_ack_enable"><strong>set_ack_enable</strong></a>(self, enable)</dt></dl>
+
+<dl><dt><a name="Crazyradio-set_address"><strong>set_address</strong></a>(self, address)</dt><dd><tt>Set&nbsp;the&nbsp;radio&nbsp;address&nbsp;to&nbsp;be&nbsp;used</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_arc"><strong>set_arc</strong></a>(self, arc)</dt><dd><tt>Set&nbsp;the&nbsp;ACK&nbsp;retry&nbsp;count&nbsp;for&nbsp;radio&nbsp;communication</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_ard_bytes"><strong>set_ard_bytes</strong></a>(self, nbytes)</dt></dl>
+
+<dl><dt><a name="Crazyradio-set_ard_time"><strong>set_ard_time</strong></a>(self, us)</dt><dd><tt>Set&nbsp;the&nbsp;ACK&nbsp;retry&nbsp;delay&nbsp;for&nbsp;radio&nbsp;communication</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_channel"><strong>set_channel</strong></a>(self, channel)</dt><dd><tt>Set&nbsp;the&nbsp;radio&nbsp;channel&nbsp;to&nbsp;be&nbsp;used</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_cont_carrier"><strong>set_cont_carrier</strong></a>(self, active)</dt></dl>
+
+<dl><dt><a name="Crazyradio-set_data_rate"><strong>set_data_rate</strong></a>(self, datarate)</dt><dd><tt>Set&nbsp;the&nbsp;radio&nbsp;datarate&nbsp;to&nbsp;be&nbsp;used</tt></dd></dl>
+
+<dl><dt><a name="Crazyradio-set_power"><strong>set_power</strong></a>(self, power)</dt><dd><tt>Set&nbsp;the&nbsp;radio&nbsp;power&nbsp;to&nbsp;be&nbsp;used</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DR_1MPS</strong> = 1</dl>
+
+<dl><dt><strong>DR_250KPS</strong> = 0</dl>
+
+<dl><dt><strong>DR_2MPS</strong> = 2</dl>
+
+<dl><dt><strong>P_0DBM</strong> = 3</dl>
+
+<dl><dt><strong>P_M12DBM</strong> = 1</dl>
+
+<dl><dt><strong>P_M18DBM</strong> = 0</dl>
+
+<dl><dt><strong>P_M6DBM</strong> = 2</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['Crazyradio']</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Bitcraze&nbsp;AB</td></tr></table>
+</body></html>

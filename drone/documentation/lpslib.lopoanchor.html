@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module lpslib.lopoanchor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="lpslib.html"><font color="#ffffff">lpslib</font></a>.lopoanchor</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/lpslib/lopoanchor.py">/home/bitcraze/projects/crazyflie-lib-python/lpslib/lopoanchor.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;class&nbsp;represents&nbsp;the&nbsp;connection&nbsp;to&nbsp;one&nbsp;or&nbsp;more&nbsp;Loco&nbsp;Positioning&nbsp;Anchors</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="struct.html">struct</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="lpslib.lopoanchor.html#LoPoAnchor">LoPoAnchor</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LoPoAnchor">class <strong>LoPoAnchor</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LoPoAnchor-__init__"><strong>__init__</strong></a>(self, crazyflie)</dt><dd><tt>:param&nbsp;crazyflie:&nbsp;A&nbsp;crazyflie&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;be&nbsp;used&nbsp;as&nbsp;a&nbsp;bridge&nbsp;to&nbsp;the&nbsp;LoPo<br>
+&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="LoPoAnchor-reboot"><strong>reboot</strong></a>(self, anchor_id, mode)</dt></dl>
+
+<dl><dt><a name="LoPoAnchor-set_position"><strong>set_position</strong></a>(self, anchor_id, position)</dt><dd><tt>Send&nbsp;a&nbsp;packet&nbsp;with&nbsp;a&nbsp;position&nbsp;to&nbsp;one&nbsp;anchor.<br>
+:param&nbsp;anchor_id:&nbsp;The&nbsp;id&nbsp;of&nbsp;the&nbsp;targeted&nbsp;anchor.&nbsp;This&nbsp;is&nbsp;the&nbsp;first&nbsp;byte<br>
+of&nbsp;the&nbsp;anchor&nbsp;address.<br>
+:param&nbsp;position:&nbsp;The&nbsp;position&nbsp;of&nbsp;the&nbsp;anchor,&nbsp;as&nbsp;an&nbsp;array</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>LPP_TYPE_POSITION</strong> = 1</dl>
+
+<dl><dt><strong>LPP_TYPE_REBOOT</strong> = 2</dl>
+
+<dl><dt><strong>REBOOT_TO_BOOTLOADER</strong> = 0</dl>
+
+<dl><dt><strong>REBOOT_TO_FIRMWARE</strong> = 1</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

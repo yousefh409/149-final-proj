@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cflib.crtp.serialdriver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cflib.html"><font color="#ffffff">cflib</font></a>.<a href="cflib.crtp.html"><font color="#ffffff">crtp</font></a>.serialdriver</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/crtp/serialdriver.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/crtp/serialdriver.py</a></font></td></tr></table>
+    <p><tt>An&nbsp;early&nbsp;serial&nbsp;link&nbsp;driver.&nbsp;This&nbsp;could&nbsp;still&nbsp;be&nbsp;used&nbsp;(after&nbsp;some&nbsp;fixing)&nbsp;to<br>
+run&nbsp;high-speed&nbsp;CRTP&nbsp;with&nbsp;the&nbsp;Crazyflie.&nbsp;The&nbsp;UART&nbsp;can&nbsp;be&nbsp;run&nbsp;at&nbsp;2Mbit.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cflib.crtp.serialdriver.html#SerialDriver">SerialDriver</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SerialDriver">class <strong>SerialDriver</strong></a>(<a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="cflib.crtp.serialdriver.html#SerialDriver">SerialDriver</a></dd>
+<dd><a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="SerialDriver-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SerialDriver-connect"><strong>connect</strong></a>(self, uri, linkQualityCallback, linkErrorCallback)</dt></dl>
+
+<dl><dt><a name="SerialDriver-get_name"><strong>get_name</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SerialDriver-scan_interface"><strong>scan_interface</strong></a>(self, address)</dt></dl>
+
+<hr>
+Methods inherited from <a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>:<br>
+<dl><dt><a name="SerialDriver-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;link</tt></dd></dl>
+
+<dl><dt><a name="SerialDriver-enum"><strong>enum</strong></a>(self)</dt><dd><tt>Enumerate,&nbsp;and&nbsp;return&nbsp;a&nbsp;list,&nbsp;of&nbsp;the&nbsp;available&nbsp;link&nbsp;URI&nbsp;on&nbsp;this<br>
+system</tt></dd></dl>
+
+<dl><dt><a name="SerialDriver-get_help"><strong>get_help</strong></a>(self)</dt><dd><tt>return&nbsp;the&nbsp;help&nbsp;message&nbsp;on&nbsp;how&nbsp;to&nbsp;form&nbsp;the&nbsp;URI&nbsp;for&nbsp;this&nbsp;driver<br>
+None&nbsp;means&nbsp;no&nbsp;help</tt></dd></dl>
+
+<dl><dt><a name="SerialDriver-get_status"><strong>get_status</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;status&nbsp;string&nbsp;from&nbsp;the&nbsp;interface.</tt></dd></dl>
+
+<dl><dt><a name="SerialDriver-receive_packet"><strong>receive_packet</strong></a>(self, wait=0)</dt><dd><tt>Receive&nbsp;a&nbsp;CRTP&nbsp;packet.<br>
+&nbsp;<br>
+@param&nbsp;wait&nbsp;The&nbsp;time&nbsp;to&nbsp;wait&nbsp;for&nbsp;a&nbsp;packet&nbsp;in&nbsp;second.&nbsp;-1&nbsp;means&nbsp;forever<br>
+&nbsp;<br>
+@return&nbsp;One&nbsp;CRTP&nbsp;packet&nbsp;or&nbsp;None&nbsp;if&nbsp;no&nbsp;packet&nbsp;has&nbsp;been&nbsp;received.</tt></dd></dl>
+
+<dl><dt><a name="SerialDriver-send_packet"><strong>send_packet</strong></a>(self, pk)</dt><dd><tt>Send&nbsp;a&nbsp;CRTP&nbsp;packet</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['SerialDriver']</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Bitcraze&nbsp;AB</td></tr></table>
+</body></html>

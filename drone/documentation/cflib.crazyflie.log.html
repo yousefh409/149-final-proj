@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cflib.crazyflie.log</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cflib.html"><font color="#ffffff">cflib</font></a>.<a href="cflib.crazyflie.html"><font color="#ffffff">crazyflie</font></a>.log</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/crazyflie/log.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/crazyflie/log.py</a></font></td></tr></table>
+    <p><tt>Enables&nbsp;logging&nbsp;of&nbsp;variables&nbsp;from&nbsp;the&nbsp;Crazyflie.<br>
+&nbsp;<br>
+When&nbsp;a&nbsp;Crazyflie&nbsp;is&nbsp;connected&nbsp;it's&nbsp;possible&nbsp;to&nbsp;download&nbsp;a&nbsp;TableOfContent&nbsp;of&nbsp;all<br>
+the&nbsp;variables&nbsp;that&nbsp;can&nbsp;be&nbsp;logged.&nbsp;Using&nbsp;this&nbsp;it's&nbsp;possible&nbsp;to&nbsp;add&nbsp;logging<br>
+configurations&nbsp;where&nbsp;selected&nbsp;variables&nbsp;are&nbsp;sent&nbsp;to&nbsp;the&nbsp;client&nbsp;at&nbsp;a<br>
+specified&nbsp;period.<br>
+&nbsp;<br>
+Terminology:<br>
+&nbsp;&nbsp;<a href="#Log">Log</a>&nbsp;configuration&nbsp;-&nbsp;A&nbsp;configuration&nbsp;with&nbsp;a&nbsp;period&nbsp;and&nbsp;a&nbsp;number&nbsp;of&nbsp;variables<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;are&nbsp;present&nbsp;in&nbsp;the&nbsp;TOC.<br>
+&nbsp;&nbsp;Stored&nbsp;as&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;The&nbsp;size&nbsp;and&nbsp;type&nbsp;of&nbsp;the&nbsp;variable&nbsp;as&nbsp;declared&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crazyflie&nbsp;firmware<br>
+&nbsp;&nbsp;Fetch&nbsp;as&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;The&nbsp;size&nbsp;and&nbsp;type&nbsp;that&nbsp;a&nbsp;variable&nbsp;should&nbsp;be&nbsp;fetched&nbsp;as.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;does&nbsp;not&nbsp;have&nbsp;to&nbsp;be&nbsp;the&nbsp;same&nbsp;as&nbsp;the&nbsp;size&nbsp;and&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it's&nbsp;stored&nbsp;as.<br>
+&nbsp;<br>
+States&nbsp;of&nbsp;a&nbsp;configuration:<br>
+&nbsp;&nbsp;Created&nbsp;on&nbsp;host&nbsp;-&nbsp;When&nbsp;a&nbsp;configuration&nbsp;is&nbsp;created&nbsp;the&nbsp;contents&nbsp;is&nbsp;checked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;so&nbsp;that&nbsp;all&nbsp;the&nbsp;variables&nbsp;are&nbsp;present&nbsp;in&nbsp;the&nbsp;TOC.&nbsp;If&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then&nbsp;the&nbsp;configuration&nbsp;cannot&nbsp;be&nbsp;created.<br>
+&nbsp;&nbsp;Created&nbsp;on&nbsp;CF&nbsp;&nbsp;&nbsp;-&nbsp;When&nbsp;the&nbsp;configuration&nbsp;is&nbsp;deemed&nbsp;valid&nbsp;it&nbsp;is&nbsp;added&nbsp;to&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crazyflie.&nbsp;At&nbsp;this&nbsp;time&nbsp;the&nbsp;memory&nbsp;constraint&nbsp;is&nbsp;checked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;status&nbsp;returned.<br>
+&nbsp;&nbsp;Started&nbsp;on&nbsp;CF&nbsp;&nbsp;&nbsp;-&nbsp;Any&nbsp;added&nbsp;block&nbsp;that&nbsp;is&nbsp;not&nbsp;started&nbsp;can&nbsp;be&nbsp;started.&nbsp;Once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;started&nbsp;the&nbsp;Crazyflie&nbsp;will&nbsp;send&nbsp;back&nbsp;logdata&nbsp;periodically<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;according&nbsp;to&nbsp;the&nbsp;specified&nbsp;period&nbsp;when&nbsp;it's&nbsp;created.<br>
+&nbsp;&nbsp;Stopped&nbsp;on&nbsp;CF&nbsp;&nbsp;&nbsp;-&nbsp;Any&nbsp;started&nbsp;configuration&nbsp;can&nbsp;be&nbsp;stopped.&nbsp;The&nbsp;memory&nbsp;taken<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;the&nbsp;configuration&nbsp;on&nbsp;the&nbsp;Crazyflie&nbsp;is&nbsp;NOT&nbsp;freed,&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only&nbsp;effect&nbsp;is&nbsp;that&nbsp;the&nbsp;Crazyflie&nbsp;will&nbsp;stop&nbsp;sending<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logdata&nbsp;back&nbsp;to&nbsp;the&nbsp;host.<br>
+&nbsp;&nbsp;Deleted&nbsp;on&nbsp;CF&nbsp;&nbsp;&nbsp;-&nbsp;Any&nbsp;block&nbsp;that&nbsp;is&nbsp;added&nbsp;can&nbsp;be&nbsp;deleted.&nbsp;When&nbsp;this&nbsp;is&nbsp;done<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;memory&nbsp;taken&nbsp;by&nbsp;the&nbsp;configuration&nbsp;is&nbsp;freed&nbsp;on&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crazyflie.&nbsp;The&nbsp;configuration&nbsp;will&nbsp;have&nbsp;to&nbsp;be&nbsp;re-added&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;used&nbsp;again.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="errno.html">errno</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="struct.html">struct</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cflib.crazyflie.log.html#Log">Log</a>
+</font></dt><dt><font face="helvetica, arial"><a href="cflib.crazyflie.log.html#LogTocElement">LogTocElement</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Log">class <strong>Log</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Create&nbsp;log&nbsp;configuration<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Log-__init__"><strong>__init__</strong></a>(self, crazyflie=None)</dt></dl>
+
+<dl><dt><a name="Log-add_config"><strong>add_config</strong></a>(self, logconf)</dt><dd><tt>Add&nbsp;a&nbsp;log&nbsp;configuration&nbsp;to&nbsp;the&nbsp;logging&nbsp;framework.<br>
+&nbsp;<br>
+When&nbsp;doing&nbsp;this&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;log&nbsp;configuration&nbsp;will&nbsp;be&nbsp;validated<br>
+and&nbsp;listeners&nbsp;for&nbsp;new&nbsp;log&nbsp;configurations&nbsp;will&nbsp;be&nbsp;notified.&nbsp;When<br>
+validating&nbsp;the&nbsp;configuration&nbsp;the&nbsp;variables&nbsp;are&nbsp;checked&nbsp;against&nbsp;the&nbsp;TOC<br>
+to&nbsp;see&nbsp;that&nbsp;they&nbsp;actually&nbsp;exist.&nbsp;If&nbsp;they&nbsp;don't&nbsp;then&nbsp;the&nbsp;configuration<br>
+cannot&nbsp;be&nbsp;used.&nbsp;Since&nbsp;a&nbsp;valid&nbsp;TOC&nbsp;is&nbsp;required,&nbsp;a&nbsp;Crazyflie&nbsp;has&nbsp;to&nbsp;be<br>
+connected&nbsp;when&nbsp;calling&nbsp;this&nbsp;method,&nbsp;otherwise&nbsp;it&nbsp;will&nbsp;fail.</tt></dd></dl>
+
+<dl><dt><a name="Log-refresh_toc"><strong>refresh_toc</strong></a>(self, refresh_done_callback, toc_cache)</dt><dd><tt>Start&nbsp;refreshing&nbsp;the&nbsp;table&nbsp;of&nbsp;loggale&nbsp;variables</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LogTocElement">class <strong>LogTocElement</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;element&nbsp;in&nbsp;the&nbsp;<a href="#Log">Log</a>&nbsp;TOC.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LogTocElement-__init__"><strong>__init__</strong></a>(self, data=None)</dt><dd><tt>TocElement&nbsp;creator.&nbsp;Data&nbsp;is&nbsp;the&nbsp;binary&nbsp;payload&nbsp;of&nbsp;the&nbsp;element.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="LogTocElement-get_cstring_from_id"><strong>get_cstring_from_id</strong></a>(ident)</dt><dd><tt>Return&nbsp;the&nbsp;C-storage&nbsp;name&nbsp;given&nbsp;the&nbsp;variable&nbsp;type&nbsp;id</tt></dd></dl>
+
+<dl><dt><a name="LogTocElement-get_id_from_cstring"><strong>get_id_from_cstring</strong></a>(name)</dt><dd><tt>Return&nbsp;variable&nbsp;type&nbsp;id&nbsp;given&nbsp;the&nbsp;C-storage&nbsp;name</tt></dd></dl>
+
+<dl><dt><a name="LogTocElement-get_size_from_id"><strong>get_size_from_id</strong></a>(ident)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;in&nbsp;bytes&nbsp;given&nbsp;the&nbsp;variable&nbsp;type&nbsp;id</tt></dd></dl>
+
+<dl><dt><a name="LogTocElement-get_unpack_string_from_id"><strong>get_unpack_string_from_id</strong></a>(ident)</dt><dd><tt>Return&nbsp;the&nbsp;Python&nbsp;unpack&nbsp;string&nbsp;given&nbsp;the&nbsp;variable&nbsp;type&nbsp;id</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>types</strong> = {1: ('uint8_t', '&lt;B', 1), 2: ('uint16_t', '&lt;H', 2), 3: ('uint32_t', '&lt;L', 4), 4: ('int8_t', '&lt;b', 1), 5: ('int16_t', '&lt;h', 2), 6: ('int32_t', '&lt;i', 4), 7: ('float', '&lt;f', 4), 8: ('FP16', '&lt;h', 2)}</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['Log', 'LogTocElement']</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Bitcraze&nbsp;AB</td></tr></table>
+</body></html>
