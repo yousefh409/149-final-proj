@@ -64,9 +64,8 @@ def command(cf: Crazyflie):
         else:
             errorstate()
 
+        # iterate again after some time
         time.sleep(0.1)
-
-    return None
 
 
 if __name__ == '__main__':
