@@ -4,60 +4,67 @@ import sys
 import time
 from threading import Event
 import keyboard
+import numpy as np
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.crazyflie.commander import Commander
 
-
-
 def getvelocity():
-    vx = 0.0
-    vy = 0.0
-    vz = 0.0
+    v = np.array([0.0, 0.0, 0.0])
     maxvel = 0.05
 
     if keyboard.is_pressed('w'):
-        print('w pressed')
-        vx += 1
+        v[0] += 1
     if keyboard.is_pressed('s'):
-        print('s pressed')
-        vx -= 1
+        v[0] -= 1
     if keyboard.is_pressed('a'):
-        print('a pressed')
-        vy -= 1
+        v[1] -= 1
     if keyboard.is_pressed('d'):
-        print('d pressed')
-        vy += 1
+        v[1] += 1
     if keyboard.is_pressed('space'):
-        print('space pressed')
-        vz += 1
+        v[2] += 1
     if keyboard.is_pressed('enter'):
-        print('enter pressed')
-        vz -= 1
+        v[2] -= 1
 
-    v_squared = vx**2 + vy**2 + vz**2
-    tolerance = 1e-5
-    if (abs(v_squared) <= tolerance):
-        return (0.0, 0.0, 0.0)
-    else:
-        # TODO - fix this
-        return vx, vy, vz
+    return v / np.linalg.norm(v) * maxvel
+
+
+def offstate(commander):
+    print('OFF')
+    commander.send_stop_setpoint()
+
+def onstate(commander, velocity):
+    vx, vy, vz = velocity
+    print(f'{vx:.2f} {vy:.2f} {vz:.2f}')
+    commander.send_velocity_world_setpoint(vx, vy, vz, 0.0)
+
+def errorstate():
+    print('Unreachable state')
+    exit(-1)
 
 
 def command(cf: Crazyflie):
     commander = Commander(cf)
+    state = 0
 
     while True:
-        if (keyboard.is_pressed('backspace')):
-            print('Quitting')
-            commander.send_stop_setpoint()
-            break
+        # updates state
+        if keyboard.is_pressed('backspace'):
+            state = 0
+        elif keyboard.is_pressed('space'):
+            state = 1
+
+        # executes function based on state.
+        if state == 0:
+            offstate(commander)
+        elif state == 1:
+            onstate(commander, getvelocity())
         else:
-            vx, vy, vz = getvelocity()
-            commander.send_velocity_world_setpoint(vx, vy, vz, 0.0)
-            time.sleep(0.1)
+            errorstate()
+
+        time.sleep(0.1)
 
     return None
 
