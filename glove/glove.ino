@@ -75,10 +75,13 @@ void setup() {
 
 void read_compass() {
   compass.read();
-  accelx.setValue(int(compass.a.x));
-  accely.setValue(int(compass.a.y));
-  accelz.setValue(int(compass.a.z));
-  Serial.println("Ax: "+String(compass.a.x)+", Ay: "+String(compass.a.y)+", Az: "+String(compass.a.z));
+  int ax = int(compass.a.x >> 4); // convert to units of (mg)
+  int ay = int(compass.a.x >> 4);
+  int az = int(compass.a.x >> 4);
+  accelx.setValue(ax);
+  accely.setValue(ay);
+  accelz.setValue(az);
+  Serial.println("Ax: "+String(ax)+", Ay: "+String(ay)+", Az: "+String(az));
 }
 
 void read_flex() {
@@ -94,11 +97,14 @@ void read_flex() {
 }
 
 void read_gyro() {
+  int gyroX = int(gyro.g.x * 8.75); // convert to units of (mdps) = mill-degrees per second
+  int gyroY = int(gyro.g.y * 8.75);
+  int gyroZ = int(gyro.g.z * 8.75);
   gyro.read();
-  gyrox.setValue(int(gyro.g.x));
-  gyroy.setValue(int(gyro.g.y));
-  gyroz.setValue(int(gyro.g.z));
-  Serial.println("Gx: "+String(gyro.g.x)+", Gy: "+String(gyro.g.y)+", Gz: "+String(gyro.g.z));
+  gyrox.setValue(gyroX);
+  gyroy.setValue(gyroY);
+  gyroz.setValue(gyroZ);
+  Serial.println("Gx: "+String(gyroX)+", Gy: "+String(gyroY)+", Gz: "+String(gyroZ));
 }
 
 void loop() {
