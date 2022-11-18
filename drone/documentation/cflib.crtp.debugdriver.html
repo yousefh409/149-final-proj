@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cflib.crtp.debugdriver</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cflib.html"><font color="#ffffff">cflib</font></a>.<a href="cflib.crtp.html"><font color="#ffffff">crtp</font></a>.debugdriver</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bitcraze/projects/crazyflie-lib-python/cflib/crtp/debugdriver.py">/home/bitcraze/projects/crazyflie-lib-python/cflib/crtp/debugdriver.py</a></font></td></tr></table>
+    <p><tt>Fake&nbsp;link&nbsp;driver&nbsp;used&nbsp;to&nbsp;debug&nbsp;the&nbsp;UI&nbsp;without&nbsp;using&nbsp;the&nbsp;Crazyflie.<br>
+&nbsp;<br>
+The&nbsp;operation&nbsp;of&nbsp;this&nbsp;driver&nbsp;can&nbsp;be&nbsp;controlled&nbsp;in&nbsp;two&nbsp;ways,&nbsp;either&nbsp;by<br>
+connecting&nbsp;to&nbsp;different&nbsp;URIs&nbsp;or&nbsp;by&nbsp;sending&nbsp;messages&nbsp;to&nbsp;the&nbsp;<a href="#DebugDriver">DebugDriver</a>&nbsp;port<br>
+though&nbsp;CRTP&nbsp;once&nbsp;connected.<br>
+&nbsp;<br>
+For&nbsp;normal&nbsp;connections&nbsp;a&nbsp;console&nbsp;thread&nbsp;is&nbsp;also&nbsp;started&nbsp;that&nbsp;will&nbsp;send<br>
+generated&nbsp;console&nbsp;output&nbsp;via&nbsp;CRTP.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="errno.html">errno</a><br>
+<a href="logging.html">logging</a><br>
+<a href="queue.html">queue</a><br>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+<a href="re.html">re</a><br>
+<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="struct.html">struct</a><br>
+<a href="sys.html">sys</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cflib.crtp.debugdriver.html#DebugDriver">DebugDriver</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DebugDriver">class <strong>DebugDriver</strong></a>(<a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Debug&nbsp;driver&nbsp;used&nbsp;for&nbsp;debugging&nbsp;UI/communication&nbsp;without&nbsp;using&nbsp;a<br>
+Crazyflie<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="cflib.crtp.debugdriver.html#DebugDriver">DebugDriver</a></dd>
+<dd><a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="DebugDriver-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DebugDriver-close"><strong>close</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DebugDriver-connect"><strong>connect</strong></a>(self, uri, linkQualityCallback, linkErrorCallback)</dt></dl>
+
+<dl><dt><a name="DebugDriver-get_name"><strong>get_name</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DebugDriver-get_status"><strong>get_status</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DebugDriver-receive_packet"><strong>receive_packet</strong></a>(self, time=0)</dt></dl>
+
+<dl><dt><a name="DebugDriver-scan_interface"><strong>scan_interface</strong></a>(self, address)</dt></dl>
+
+<dl><dt><a name="DebugDriver-send_packet"><strong>send_packet</strong></a>(self, pk)</dt></dl>
+
+<hr>
+Methods inherited from <a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>:<br>
+<dl><dt><a name="DebugDriver-enum"><strong>enum</strong></a>(self)</dt><dd><tt>Enumerate,&nbsp;and&nbsp;return&nbsp;a&nbsp;list,&nbsp;of&nbsp;the&nbsp;available&nbsp;link&nbsp;URI&nbsp;on&nbsp;this<br>
+system</tt></dd></dl>
+
+<dl><dt><a name="DebugDriver-get_help"><strong>get_help</strong></a>(self)</dt><dd><tt>return&nbsp;the&nbsp;help&nbsp;message&nbsp;on&nbsp;how&nbsp;to&nbsp;form&nbsp;the&nbsp;URI&nbsp;for&nbsp;this&nbsp;driver<br>
+None&nbsp;means&nbsp;no&nbsp;help</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="cflib.crtp.crtpdriver.html#CRTPDriver">cflib.crtp.crtpdriver.CRTPDriver</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>__all__</strong> = ['DebugDriver']</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Bitcraze&nbsp;AB</td></tr></table>
+</body></html>
