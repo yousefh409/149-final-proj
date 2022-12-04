@@ -12,7 +12,6 @@
 #include <LSM303.h>
 #include <L3G.h>
 
-L3G gyro;
 LSM303 compass;
 
 BLEService gloveService("fff0");  // User defined service
@@ -26,14 +25,10 @@ BLEIntCharacteristic accelx("aaa1", BLERead | BLENotify);
 BLEIntCharacteristic accely("aaa2", BLERead | BLENotify);
 BLEIntCharacteristic accelz("aaa3", BLERead | BLENotify);
 
-BLEIntCharacteristic gyrox("bbb1", BLERead | BLENotify);
-BLEIntCharacteristic gyroy("bbb2", BLERead | BLENotify);
-BLEIntCharacteristic gyroz("bbb3", BLERead | BLENotify);
-
 void setup() {
   Serial.begin(9600);    // initialize serial communication
   pinMode(LED_BUILTIN, OUTPUT); // initialize the built-in LED pin
-  while (!Serial);
+  //while (!Serial);
 
   Wire.begin();
   if (!compass.init()) {
@@ -41,12 +36,6 @@ void setup() {
     while (1);
   }
   compass.enableDefault();
-
-  if (!gyro.init()) {
-    Serial.println("Failed to autodetect gyro type!");
-    while (1);
-  }
-  gyro.enableDefault();
 
   if (!BLE.begin()) {   // initialize BLE
     Serial.println("starting BLE failed!");
@@ -62,9 +51,6 @@ void setup() {
   gloveService.addCharacteristic(accelx);
   gloveService.addCharacteristic(accely);
   gloveService.addCharacteristic(accelz);
-  gloveService.addCharacteristic(gyrox);
-  gloveService.addCharacteristic(gyroy);
-  gloveService.addCharacteristic(gyroz);
   BLE.addService(gloveService); // Add service
 
   BLE.advertise();  // Start advertising
@@ -76,8 +62,8 @@ void setup() {
 void read_compass() {
   compass.read();
   int ax = int(compass.a.x >> 4); // convert to units of (mg)
-  int ay = int(compass.a.x >> 4);
-  int az = int(compass.a.x >> 4);
+  int ay = int(compass.a.y >> 4);
+  int az = int(compass.a.z >> 4);
   accelx.setValue(ax);
   accely.setValue(ay);
   accelz.setValue(az);
@@ -96,16 +82,16 @@ void read_flex() {
   Serial.println("flex0: "+String(flex0)+", flex1: "+String(flex1)+", flex2: "+String(flex2)+", flex3: "+String(flex3));
 }
 
-void read_gyro() {
-  int gyroX = int(gyro.g.x * 8.75); // convert to units of (mdps) = mill-degrees per second
-  int gyroY = int(gyro.g.y * 8.75);
-  int gyroZ = int(gyro.g.z * 8.75);
-  gyro.read();
-  gyrox.setValue(gyroX);
-  gyroy.setValue(gyroY);
-  gyroz.setValue(gyroZ);
-  Serial.println("Gx: "+String(gyroX)+", Gy: "+String(gyroY)+", Gz: "+String(gyroZ));
-}
+// void read_gyro() {
+//   int gyroX = int(gyro.g.x * 8.75/1000); // convert to units of (mdps) = mill-degrees per second; divide by 1000 to convert to degrees
+//   int gyroY = int(gyro.g.y * 8.75/1000);
+//   int gyroZ = int(gyro.g.z * 8.75/1000);
+//   gyro.read();
+//   gyrox.setValue(gyroX);
+//   gyroy.setValue(gyroY);
+//   gyroz.setValue(gyroZ);
+//   Serial.println("Gx: "+String(gyroX)+", Gy: "+String(gyroY)+", Gz: "+String(gyroZ));
+// }
 
 void loop() {
   BLEDevice central = BLE.central();  // Wait for a BLE central to connect
@@ -120,10 +106,9 @@ void loop() {
 
     int count = 0;
     while (central.connected()){
-      delay(250);
-
+      delay(100);
       read_compass();
-      read_gyro();
+      delay(100);
       read_flex();
     } // keep looping while connected
     

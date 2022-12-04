@@ -2,15 +2,15 @@ from bleak import BleakClient
 import asyncio
 
 def accelx(sender, data):
-    int_data = int.from_bytes(data, "little")
+    int_data = int.from_bytes(data, byteorder="little", signed=True)
     print("Ax: ", int_data)
     
 def accely(sender, data):
-    int_data = int.from_bytes(data, "little")
+    int_data = int.from_bytes(data, byteorder="little", signed=True)
     print("Ay: ", int_data)
     
 def accelz(sender, data):
-    int_data = int.from_bytes(data, "little")
+    int_data = int.from_bytes(data, byteorder="little", signed=True)
     print("Az: ", int_data)
     
 def gyrox(sender, data):
@@ -47,9 +47,6 @@ async def main(address):
         table = { 'aaa1' : accelx,
                  'aaa2' : accely,
                  'aaa3' : accelz,
-                 'bbb1' : gyrox,
-                 'bbb2' : gyroy,
-                 'bbb3' : gyroz,
                  'ccc0' : flex0,
                  'ccc1' : flex1,
                  'ccc2' : flex2,
@@ -65,11 +62,11 @@ async def main(address):
                 await client.start_notify(characteristic, fn)
 
             # waits 15 seconds
-            await asyncio.sleep(5.0)
+            await asyncio.sleep(15.0)
 
             for (charuuid) in table:
                 await client.stop_notify(charuuid)
 
 if __name__ == "__main__":  
-    address = "d8:87:02:70:0b:13"
+    address = "68:a2:25:0d:75:60"
     asyncio.run(main(address))
