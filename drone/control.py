@@ -157,16 +157,16 @@ async def main(address, cf: Crazyflie):
 
         # state 1 : Make the drone Ascend
         #          Spiderman web shooting and the hand is moved up
-        if not flex0_reading and flex1_reading and flex2_reading and not flex3_reading and *insert gyroscope variables*:
+        if not flex0_reading < 60 and flex1_reading > 100 and flex2_reading > 200 and not flex3_reading < 60 and accel_z_reading < 200:
             state = 1
         
         # state 2: Make the drone Descend
         #         All four fingers are bent
-        if flex0_reading and flex1_reading and flex2_reading and flex3_reading:
+        if flex0_reading > 100 and flex1_reading > 100 and flex2_reading > 200 and flex3_reading > 100:
             state = 2
 
         # state 3: Make the drone go Straight
-        if :
+        if flex0_reading > 100 and flex1_reading > 100 and flex2_reading > 200 and flex3_reading > 100 and accel_z_reading < 200:
             
             state = 3
 
@@ -175,11 +175,11 @@ async def main(address, cf: Crazyflie):
             state = 4
 
         # state 5: Make the drone go left
-        if :
+        if accel_x_reading > 800:
             state = 5
 
         # state 6: Make the drone go right
-        if :
+        if accel_x_reading < 250 :
             state = 6
 
         # state 7: Turn off the drone
