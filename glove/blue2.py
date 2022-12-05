@@ -60,9 +60,8 @@ async def main(address):
             # start_notifies
             for (charuuid, fn) in table.items():
                 characteristic = service.get_characteristic(charuuid)
-                if not characteristic:
-                    continue
-                await client.start_notify(characteristic, fn)
+                if characteristic is not None:
+                    await client.start_notify(characteristic, fn)
 
             # waits 15 seconds
             await asyncio.sleep(5.0)
