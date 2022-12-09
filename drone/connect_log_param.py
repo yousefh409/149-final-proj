@@ -6,7 +6,7 @@ import keyboard
 import numpy as np
 
 import cflib.crtp
-from cflib.crazyflie import Crazyflie
+from cflib.crazyflie import Crazyflie, Param
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 from cflib.crazyflie.commander import Commander
 
@@ -100,7 +100,7 @@ def offstate(commander):
         NEXTSTATE = TAKEOFF
     commander.send_stop_setpoint()
 
-def onstate(commander):
+def onstate(commander: Commander, param: Param):
     global NEXTSTATE
 
     r, p, y = 0, 0, 0
@@ -143,7 +143,8 @@ def onstate(commander):
     print(f'{r:.2f} {p:.2f} {y:.2f}')
     # print(thrust)
     commander.send_setpoint(r, p, y, thrust)
-    # commander.send_velocity_world_setpoint(0, 0, 0.5, 0.0)
+    param.set_value("flightmode.althold", "True")
+    # commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
 
 def takeoffstate(commander):
     global NEXTSTATE
@@ -189,8 +190,11 @@ def handshape():
         return UNDEFINED
 
 
-def command(cf: Crazyflie):
+def command(cf: Crazyflie, uri):
     commander = Commander(cf)
+    cf.open_link(uri)
+    param = Param(cf)
+
     commander.send_setpoint(0, 0, 0, 0)
     global STATE
 
@@ -200,7 +204,7 @@ def command(cf: Crazyflie):
             offstate(commander)
             print('OFFSTATE')
         elif STATE == ON:
-            onstate(commander)
+            onstate(commander, param)
             print('ONSTATE')
         elif STATE == TAKEOFF:
             takeoffstate(commander)
@@ -244,8 +248,8 @@ async def bluetooth(address):
 
 if __name__ == '__main__':
     # initialize bluetooth async
-    address = "d8:87:02:70:0b:13"
-    asyncio.run(bluetooth(address))
+    # address = "d8:87:02:70:0b:13"
+    # asyncio.run(bluetooth(address))
 
     # URI to the Crazyflie to connect to
     uri = 'radio://0/10/250K/E7E7E7E7E7'
@@ -253,4 +257,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.ERROR)
     cflib.crtp.init_drivers()
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
-        command(scf.cf)
+        command(scf.cf, uri)
