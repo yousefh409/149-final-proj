@@ -1,21 +1,17 @@
 # import logging
 import logging
 import time
-from threading import Event
-import keyboard
+# import keyboard
 import numpy as np
 
-import cflib.crtp
-from cflib.crazyflie import Crazyflie, Param
+from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.crazyflie.commander import Commander
 
 from bleak import BleakClient
 import asyncio
 import cflib.crtp
-from cflib.crazyflie import Crazyflie
-from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
-from cflib.crazyflie.commander import Commander
+
+import multiprocessing
 
 
 # predefined states
@@ -55,33 +51,37 @@ def accelx(sender, data):
 
 def accely(sender, data):
     accel[1] = int.from_bytes(data, "little")
-    print("Ay: ", accel[0])
+    # print("Ay: ", accel[0])
     input_bool['Ay'] = int(np.abs(accel[1]) > 250) * np.sign(accel[1])
 
 def accelz(sender, data):
     accel[2] = int.from_bytes(data, "little")
-    print("Az: ", accel[2])
+    # print("Az: ", accel[2])
     input_bool['Az'] = int(np.abs(accel[2]) > 250) * np.sign(accel[2])
 
+# 760 - 460
 def flex0(sender, data):
     flex[0] = int.from_bytes(data, "little")
-    print("flex0: ", flex[0])
-    input_bool['flex0'] = flex[0] < 100
+    # print("flex0: ", flex[0])
+    input_bool['flex0'] = flex[0] < (760 + 460) // 2
 
+# 620 - 140
 def flex1(sender, data):
     flex[1] = int.from_bytes(data, "little")
-    print("flex1: ", flex[1])
-    input_bool['flex1'] = flex[1] < 100
+    # print("flex1: ", flex[1])
+    input_bool['flex1'] = flex[1] < (620 + 140) // 2
 
+# 380 - 80
 def flex2(sender, data):
     flex[2] = int.from_bytes(data, "little")
-    print("flex2: ", flex[2])
-    input_bool['flex2'] = flex[2] < 100
+    # print("flex2: ", flex[2])
+    input_bool['flex2'] = flex[2] < (380 + 80) // 2
 
+# 280 - 80
 def flex3(sender, data):
     flex[3] = int.from_bytes(data, "little")
-    print("flex3: ", flex[3])
-    input_bool['flex3'] = flex[3] < 200
+    # print("flex3: ", flex[3])
+    input_bool['flex3'] = flex[3] < (280 + 80) // 2
 
 
 # util functions
@@ -92,33 +92,38 @@ def calculate_rpy(rpy_readings):
 
 
 # state functions
-def offstate(commander):
+def offstate(cf: Crazyflie):
     global NEXTSTATE
-    if keyboard.is_pressed('backspace'):
-        NEXTSTATE = OFF
-    elif keyboard.is_pressed('space'):
+    # if keyboard.is_pressed('backspace'):
+    #     NEXTSTATE = OFF
+    # elif keyboard.is_pressed('space'):
+    #     NEXTSTATE = TAKEOFF
+    if handshape() == ASCEND:
         NEXTSTATE = TAKEOFF
-    commander.send_stop_setpoint()
+    else:
+        NEXTSTATE = OFF
 
-def onstate(commander: Commander, param: Param):
+    cf.commander.send_stop_setpoint()
+
+def onstate(cf: Crazyflie):
     global NEXTSTATE
 
     r, p, y = 0, 0, 0
     
-    if keyboard.is_pressed('space'):
-        NEXTSTATE = LAND
-    elif keyboard.is_pressed('backspace'):
-        NEXTSTATE = OFF
-        return
-    # For Keyboard Use
-    if keyboard.is_pressed('w'):
-        p += 15
-    if keyboard.is_pressed('a'):
-        r -= 15
-    if keyboard.is_pressed('s'):
-        p -= 15
-    if keyboard.is_pressed('d'):
-        r += 15
+    # if keyboard.is_pressed('v'):
+    #     NEXTSTATE = LAND
+    # elif keyboard.is_pressed('backspace'):
+    #     NEXTSTATE = OFF
+    #     return
+    # # For Keyboard Use
+    # if keyboard.is_pressed('w'):
+    #     p += 15
+    # if keyboard.is_pressed('a'):
+    #     r -= 15
+    # if keyboard.is_pressed('s'):
+    #     p -= 15
+    # if keyboard.is_pressed('d'):
+    #     r += 15
 
     # For Glove use
     """
@@ -140,37 +145,43 @@ def onstate(commander: Commander, param: Param):
 
     thrust = 37500
 
-    print(f'{r:.2f} {p:.2f} {y:.2f}')
-    # print(thrust)
-    commander.send_setpoint(r, p, y, thrust)
-    param.set_value("flightmode.althold", "True")
+    # print(f'{r:.2f} {p:.2f} {y:.2f}')
+    # # print(thrust)
+    cf.commander.send_setpoint(r, p, y, thrust)
+    cf.param.set_value("flightmode.althold", "True")
     # commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
 
-def takeoffstate(commander):
+def takeoffstate(cf: Crazyflie):
     global NEXTSTATE
-    if keyboard.is_pressed('b'):
-        NEXTSTATE = ON
-    elif keyboard.is_pressed('backspace'):
+    # if keyboard.is_pressed('b'):
+    #     NEXTSTATE = ON
+    # elif keyboard.is_pressed('backspace'):
+    #     NEXTSTATE = OFF
+    #     return
+
+    if handshape() == ASCEND:
+        NEXTSTATE = TAKEOFF
+    else:
         NEXTSTATE = OFF
         return
 
     r, p, y = 0, 0, 0
     thrust = 38000
-    commander.send_setpoint(r, p, y, thrust)
+    cf.commander.send_setpoint(r, p, y, thrust)
 
 
-def landstate(commander):
+def landstate(cf: Crazyflie):
     global NEXTSTATE
-    if keyboard.is_pressed('space'):
-        NEXTSTATE = TAKEOFF
-    if keyboard.is_pressed('backspace'):
-        NEXTSTATE = OFF
-        return
+    # if keyboard.is_pressed('space'):
+    #     NEXTSTATE = TAKEOFF
+    # if keyboard.is_pressed('backspace'):
+    #     NEXTSTATE = OFF
+    #     return
 
     r, p, y = 0, 0, 0
-    thrust = 34000
-    commander.send_setpoint(r, p, y, thrust)
-
+    thrust = 32500
+    cf.param.set_value("flightmode.althold", "False")
+    cf.commander.send_setpoint(r, p, y, thrust)
 
 
 def errorstate():
@@ -190,30 +201,28 @@ def handshape():
         return UNDEFINED
 
 
-def command(cf: Crazyflie, uri):
-    commander = Commander(cf)
-    cf.open_link(uri)
-    param = Param(cf)
+def command(cf: Crazyflie):
+    cf.commander.send_setpoint(0, 0, 0, 0)
+    # cf.open_link(uri)
 
-    commander.send_setpoint(0, 0, 0, 0)
     global STATE
 
     while True:
         # executes function based on state.
         if STATE == OFF:
-            offstate(commander)
-            print('OFFSTATE')
+            offstate(cf)
+            # print('OFFSTATE')
         elif STATE == ON:
-            onstate(commander, param)
-            print('ONSTATE')
+            onstate(cf)
+            # print('ONSTATE')
         elif STATE == TAKEOFF:
-            takeoffstate(commander)
-            print('TAKEOFFSTATE')
+            takeoffstate(cf)
+            # print('TAKEOFFSTATE')
         elif STATE == LAND:
-            landstate(commander)
-            print('LANDSTATE')
+            landstate(cf)
+            # print('LANDSTATE')
         else:
-            print('ERRORSTATE')
+            # print('ERRORSTATE')
             errorstate()
 
         # iterate again after some time
@@ -240,21 +249,29 @@ async def bluetooth(address):
                     await client.start_notify(characteristic, fn)
 
             # waits 15 seconds
-            await asyncio.sleep(5.0)
+            # await asyncio.sleep(5.0)
 
-            for (charuuid) in table:
-                await client.stop_notify(charuuid)
+            # for (charuuid) in table:
+            #     await client.stop_notify(charuuid)
 
-
-if __name__ == '__main__':
-    # initialize bluetooth async
-    # address = "d8:87:02:70:0b:13"
-    # asyncio.run(bluetooth(address))
-
+def drone():
     # URI to the Crazyflie to connect to
     uri = 'radio://0/10/250K/E7E7E7E7E7'
-    deck_attached_event = Event()
     logging.basicConfig(level=logging.ERROR)
     cflib.crtp.init_drivers()
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
-        command(scf.cf, uri)
+        command(scf.cf)
+
+def initbluetooth():
+    # initialize bluetooth async
+    address = "68:a2:25:0d:75:60"
+    asyncio.run(bluetooth(address))
+
+
+if __name__ == '__main__':
+    # dronethread = multiprocessing.Process(target=drone)
+    # dronethread.run()
+
+    # bluetooththread = multiprocessing.Process(target=initbluetooth)
+    # bluetooththread.run()
+    initbluetooth()
