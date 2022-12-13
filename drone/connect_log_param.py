@@ -234,6 +234,18 @@ def chachastate(cf: Crazyflie):
 
     cf.commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
 
+def circlestate(cf: Crazyflie):
+    current_time = time.time()
+    thrust = 37500
+    t = time.time() - current_time
+    while t < 2*np.pi:
+        t = time.time() - current_time
+        r, p, y = np.cos(t), np.sin(t), 0
+        cf.commander.send_setpoint(r, p, y, thrust)
+    cf.commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
+
+
+
 def errorstate():
     exit(-1)
 
