@@ -70,8 +70,8 @@ def command(cf: Crazyflie):
 if __name__ == '__main__':
     # URI to the Crazyflie to connect to
     uri = 'radio://0/10/250K/E7E7E7E7E7'
-    deck_attached_event = Event()
-    logging.basicConfig(level=logging.ERROR)
+    print("hello")
     cflib.crtp.init_drivers()
+    print("hello3")
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         command(scf.cf)

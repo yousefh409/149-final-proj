@@ -61,10 +61,10 @@ async def main(address):
                     await client.start_notify(characteristic, fn)
 
             # waits 15 seconds
-            await asyncio.sleep(15.0)
+            # await asyncio.sleep(15.0)
 
-            for (charuuid) in table:
-                await client.stop_notify(charuuid)
+            # for (charuuid) in table:
+            #     await client.stop_notify(charuuid)
 
 if __name__ == "__main__":  
     address = "68:a2:25:0d:75:60"

@@ -17,7 +17,7 @@ import multiprocessing
 # predefined states
 OFF = 0
 ON = 1
-TAKEOFF = 2
+ASCEND = 2
 LAND = 3
 # MOVE = 4
 
@@ -94,12 +94,19 @@ def calculate_rpy(rpy_readings):
 # state functions
 def offstate(cf: Crazyflie):
     global NEXTSTATE
+
+    # Keyboard Debugging
+    """
     # if keyboard.is_pressed('backspace'):
     #     NEXTSTATE = OFF
     # elif keyboard.is_pressed('space'):
-    #     NEXTSTATE = TAKEOFF
+    #     NEXTSTATE = ASCEND
+    """
+    # Glove Interface
     if handshape() == ASCEND:
-        NEXTSTATE = TAKEOFF
+        NEXTSTATE = ASCEND
+    elif handshape() == UNDEFINED:
+        NEXTSTATE = UNDEFINED
     else:
         NEXTSTATE = OFF
 
@@ -109,24 +116,42 @@ def onstate(cf: Crazyflie):
     global NEXTSTATE
 
     r, p, y = 0, 0, 0
-    
-    # if keyboard.is_pressed('v'):
-    #     NEXTSTATE = LAND
-    # elif keyboard.is_pressed('backspace'):
-    #     NEXTSTATE = OFF
-    #     return
-    # # For Keyboard Use
-    # if keyboard.is_pressed('w'):
-    #     p += 15
-    # if keyboard.is_pressed('a'):
-    #     r -= 15
-    # if keyboard.is_pressed('s'):
-    #     p -= 15
-    # if keyboard.is_pressed('d'):
-    #     r += 15
 
-    # For Glove use
+    if handshape() == ASCEND:
+        NEXTSTATE = ASCEND
+    elif handshape() == ON:
+        NEXTSTATE = ON
+    elif handshape() == CIRCLE:
+        NEXTSTATE = CIRCLE
+    elif handshape() == DESCEND:
+        NEXTSTATE = DESCEND
+    elif handshape() == DEFAULT:
+        NEXTSTATE = NEXTSTATE
+    elif handshape() == UNDEFINED:
+        NEXTSTATE = UNDEFINED
+    else:
+        NEXTSTATE = OFF
+        return
+    
+    # For Keyboard use DEBUGGING
     """
+    if keyboard.is_pressed('v'):
+        NEXTSTATE = LAND
+    elif keyboard.is_pressed('backspace'):
+        NEXTSTATE = OFF
+        return
+    # For Keyboard Use
+    if keyboard.is_pressed('w'):
+        p += 15
+    if keyboard.is_pressed('a'):
+        r -= 15
+    if keyboard.is_pressed('s'):
+        p -= 15
+    if keyboard.is_pressed('d'):
+        r += 15
+    """
+    # For Glove use
+    # Moves the drone in the appropiate direction according to the user's hand movements
     if input_bool["Ay"] == 1:
         p += 15
     if input_bool["Ax"] == -1:
@@ -135,32 +160,38 @@ def onstate(cf: Crazyflie):
         p -= 15
     if input_bool["Ax"] == 1:
         r += 15
-    """
-
-
-    # thrust = 0.0 # TODO - calculate from gesture
-    # curr_rpy = calculate_rpy(accel)
-    # init_rpy = calculate_rpy(init_accel)
-    # r, p, y = np.subtract(curr_rpy, init_rpy)
 
     thrust = 37500
 
     # print(f'{r:.2f} {p:.2f} {y:.2f}')
-    # # print(thrust)
     cf.commander.send_setpoint(r, p, y, thrust)
     cf.param.set_value("flightmode.althold", "True")
     # commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
 
-def takeoffstate(cf: Crazyflie):
+def ascendstate(cf: Crazyflie):
     global NEXTSTATE
-    # if keyboard.is_pressed('b'):
-    #     NEXTSTATE = ON
-    # elif keyboard.is_pressed('backspace'):
-    #     NEXTSTATE = OFF
-    #     return
+
+    # Keyboard Debugging
+    """
+    if keyboard.is_pressed('b'):
+        NEXTSTATE = ON
+    elif keyboard.is_pressed('backspace'):
+        NEXTSTATE = OFF
+        return
+    """
 
     if handshape() == ASCEND:
-        NEXTSTATE = TAKEOFF
+        NEXTSTATE = ASCEND
+    elif handshape() == ON:
+        NEXTSTATE = ON
+    elif handshape() == CIRCLE:
+        NEXTSTATE = CIRCLE
+    elif handshape() == DESCEND:
+        NEXTSTATE = DESCEND
+    elif handshape() == DEFAULT:
+        NEXTSTATE = NEXTSTATE
+    elif handshape() == UNDEFINED:
+        NEXTSTATE = UNDEFINED
     else:
         NEXTSTATE = OFF
         return
@@ -170,13 +201,34 @@ def takeoffstate(cf: Crazyflie):
     cf.commander.send_setpoint(r, p, y, thrust)
 
 
-def landstate(cf: Crazyflie):
+def descendstate(cf: Crazyflie):
     global NEXTSTATE
-    # if keyboard.is_pressed('space'):
-    #     NEXTSTATE = TAKEOFF
-    # if keyboard.is_pressed('backspace'):
-    #     NEXTSTATE = OFF
-    #     return
+
+    # Glove interface
+    if handshape() == ASCEND:
+        NEXTSTATE = ASCEND
+    elif handshape() == ON:
+        NEXTSTATE = ON
+    elif handshape() == CIRCLE:
+        NEXTSTATE = CIRCLE
+    elif handshape() == DESCEND:
+        NEXTSTATE = DESCEND
+    elif handshape() == DEFAULT:
+        NEXTSTATE = NEXTSTATE
+    elif handshape() == UNDEFINED:
+        NEXTSTATE = UNDEFINED
+    else:
+        NEXTSTATE = OFF
+        return
+
+    # Keyboard Debugging
+    """
+    if keyboard.is_pressed('space'):
+        NEXTSTATE = ASCEND
+    if keyboard.is_pressed('backspace'):
+        NEXTSTATE = OFF
+        return
+    """
 
     r, p, y = 0, 0, 0
     thrust = 32500
@@ -215,12 +267,12 @@ def command(cf: Crazyflie):
         elif STATE == ON:
             onstate(cf)
             # print('ONSTATE')
-        elif STATE == TAKEOFF:
-            takeoffstate(cf)
-            # print('TAKEOFFSTATE')
+        elif STATE == ASCEND:
+            ascendstate(cf)
+            # print('ASCENDSTATE')
         elif STATE == LAND:
-            landstate(cf)
-            # print('LANDSTATE')
+            descendstate(cf)
+            # print('DESCENDSTATE')
         else:
             # print('ERRORSTATE')
             errorstate()
@@ -254,13 +306,13 @@ async def bluetooth(address):
             # for (charuuid) in table:
             #     await client.stop_notify(charuuid)
 
-def drone():
-    # URI to the Crazyflie to connect to
-    uri = 'radio://0/10/250K/E7E7E7E7E7'
-    logging.basicConfig(level=logging.ERROR)
-    cflib.crtp.init_drivers()
-    with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
-        command(scf.cf)
+# def drone():
+#     # URI to the Crazyflie to connect to
+#     uri = 'radio://0/10/250K/E7E7E7E7E7'
+#     logging.basicConfig(level=logging.ERROR)
+#     cflib.crtp.init_drivers()
+#     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
+#         command(scf.cf)
 
 def initbluetooth():
     # initialize bluetooth async
@@ -275,3 +327,8 @@ if __name__ == '__main__':
     # bluetooththread = multiprocessing.Process(target=initbluetooth)
     # bluetooththread.run()
     initbluetooth()
+    uri = 'radio://0/10/250K/E7E7E7E7E7'
+    logging.basicConfig(level=logging.ERROR)
+    cflib.crtp.init_drivers()
+    with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
+        command(scf.cf)
