@@ -4,6 +4,8 @@ import time
 # import keyboard
 import numpy as np
 
+from pygame import mixer
+
 from cflib.crazyflie import Crazyflie
 from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 
@@ -12,7 +14,7 @@ import asyncio
 import cflib.crtp
 
 import multiprocessing
-
+import random
 
 # predefined states
 OFF = 0
@@ -234,6 +236,66 @@ def descendstate(cf: Crazyflie):
     thrust = 32500
     cf.param.set_value("flightmode.althold", "False")
     cf.commander.send_setpoint(r, p, y, thrust)
+
+def chachastate(cf: Crazyflie):
+    thrust = 37500
+    cf.param.set_value("flightmode.althold", "True")
+
+    mixer.init()
+    mixer.music.load("sounds/cha-cha-slide.mp3")
+    mixer.music.play()
+
+    # slide to the left
+    r, p, y = -15, 0, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(1.45)
+    
+    # slide to the right
+    r, p, y = 15, 0, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(1.35)
+    
+    # first criss cross
+    cf.param.set_value("flightmode.althold", "False")
+    ### go up
+    r, p, y = 15, 15, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(1.15)
+    ### go down
+    r, p, y = -15, -15, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(1.15)
+    
+    # second criss cross
+    ### go up
+    r, p, y = 15, 15, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(0.97)
+    ### go down
+    r, p, y = -15, -15, 0
+    cf.commander.send_setpoint(r, p, y, thrust)
+    time.sleep(0.97)
+    
+    # cha cha cha
+    cf.param.set_value("flightmode.althold", "True")
+    current_time = time.time()
+    while time.time() < current_time + 3:
+        r, p, y = random.choice([-15, 15]), 0, 0
+        cf.commander.send_setpoint(r, p, y, thrust)
+        time.sleep(0.5)
+
+    cf.commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
+
+def circlestate(cf: Crazyflie):
+    current_time = time.time()
+    thrust = 37500
+    t = time.time() - current_time
+    while t < 2*np.pi:
+        t = time.time() - current_time
+        r, p, y = np.cos(t), np.sin(t), 0
+        cf.commander.send_setpoint(r, p, y, thrust)
+    cf.commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
+
 
 
 def errorstate():
