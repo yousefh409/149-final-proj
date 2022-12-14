@@ -1,45 +1,36 @@
 from bleak import BleakClient
 import asyncio
 
+bt = {
+    "Ax" : -1,
+    "Ay" : -1,
+    "Az" : -1,
+    "f0" : -1,
+    "f1" : -1,
+    "f2" : -1,
+    "f3" : -1,
+}
+
 def accelx(sender, data):
-    int_data = int.from_bytes(data, byteorder="little", signed=True)
-    print("Ax: ", int_data)
-    
+    bt['Ax'] = int.from_bytes(data, byteorder="little", signed=True)
+
 def accely(sender, data):
-    int_data = int.from_bytes(data, byteorder="little", signed=True)
-    print("Ay: ", int_data)
+    bt['Ay'] = int.from_bytes(data, byteorder="little", signed=True)
     
 def accelz(sender, data):
-    int_data = int.from_bytes(data, byteorder="little", signed=True)
-    print("Az: ", int_data)
-    
-def gyrox(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("Gx: ", int_data)
-    
-def gyroy(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("Gy: ", int_data)
-    
-def gyroz(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("Gz: ", int_data)
-    
+    bt['Az'] = int.from_bytes(data, byteorder="little", signed=True)
+
 def flex0(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("flex0: ", int_data)
-    
+    bt['f0'] = int.from_bytes(data, "little")
+
 def flex1(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("flex1: ", int_data)
-    
+    bt['f1'] = int.from_bytes(data, "little")
+
 def flex2(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("flex2: ", int_data)
-    
+    bt['f2'] = int.from_bytes(data, "little")
+
 def flex3(sender, data):
-    int_data = int.from_bytes(data, "little")
-    print("flex3: ", int_data)
+    bt['f3'] = int.from_bytes(data, "little")
 
 
 async def main(address):
@@ -59,12 +50,7 @@ async def main(address):
                 characteristic = service.get_characteristic(charuuid)
                 if characteristic is not None:
                     await client.start_notify(characteristic, fn)
-
-            # waits 15 seconds
-            # await asyncio.sleep(15.0)
-
-            # for (charuuid) in table:
-            #     await client.stop_notify(charuuid)
+        return
 
 if __name__ == "__main__":  
     address = "68:a2:25:0d:75:60"
