@@ -55,7 +55,7 @@ def obtain_values_from_bt():
     for line in p.stdout:
         obj = json.loads(line.decode())
         update_vars(obj)
-        print(bt_vars)
+        print(bt_vars, is_valid())
 
 
 # state functions
