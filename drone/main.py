@@ -25,7 +25,6 @@ LAND = 3
 # MOVE = 4
 
 # hand states
-DEFAULT = 0
 ASCEND = 1
 DESCEND = 2
 CIRCLE = 3
@@ -53,9 +52,11 @@ def obtain_values_from_bt():
         exit(1)
 
     for line in p.stdout:
+        if not line:
+            continue
         obj = json.loads(line.decode())
         update_vars(obj)
-        print(bt_vars, is_valid())
+        # print(bt_vars, handshape_str())
 
 
 # state functions
@@ -76,6 +77,8 @@ def offstate(cf: Crazyflie):
         NEXTSTATE = ASCEND
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
+    elif handshape() == ON:
+        NEXTSTATE = ON
     else:
         NEXTSTATE = OFF
 
@@ -94,8 +97,6 @@ def onstate(cf: Crazyflie):
         NEXTSTATE = CIRCLE
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
-    elif handshape() == DEFAULT:
-        NEXTSTATE = NEXTSTATE
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
     else:
@@ -157,8 +158,6 @@ def ascendstate(cf: Crazyflie):
         NEXTSTATE = CIRCLE
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
-    elif handshape() == DEFAULT:
-        NEXTSTATE = NEXTSTATE
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
     else:
@@ -182,8 +181,6 @@ def descendstate(cf: Crazyflie):
         NEXTSTATE = CIRCLE
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
-    elif handshape() == DEFAULT:
-        NEXTSTATE = NEXTSTATE
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
     else:
@@ -270,17 +267,33 @@ def errorstate():
 
 def handshape():
     # States based only on the flex sensors
-    if not (bt_vars['f0'] or bt_vars['f1'] or bt_vars['f2'] or bt_vars['f3']):
-        return DEFAULT
-    elif not (bt_vars['f1'] or bt_vars['f2'] or bt_vars['f3']) and bt_vars['f0']:
+    if   not bt_vars['f0'] and not bt_vars['f1'] and not bt_vars['f2'] and not bt_vars['f3']:
+        return ON
+    elif not bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
         return ASCEND
     elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
         return DESCEND
-    elif not (bt_vars['f0'] or bt_vars['f1']) and bt_vars['f2'] and bt_vars['f3']:
+    elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
         return CIRCLE
     else:
-        return UNDEFINED
+        # return UNDEFINED
+        return OFF
 
+
+def handshape_str():
+    hand_out = handshape()
+    if hand_out == ON:
+        return "ON"
+    elif hand_out == ASCEND:
+        return "ASCEND"
+    elif hand_out == DESCEND:
+        return "DESCEND"
+    elif hand_out == CIRCLE:
+        return "CIRCLE"
+    elif hand_out == OFF:
+        return "OFF"
+    else:
+        return "UNDEFINED"
 
 def command(cf: Crazyflie):
     cf.commander.send_setpoint(0, 0, 0, 0)
@@ -290,20 +303,22 @@ def command(cf: Crazyflie):
 
     while True:
         # executes function based on state.
+        print(bt_vars)
+
         if STATE == OFF:
             offstate(cf)
-            # print('OFFSTATE')
+            print('OFFSTATE')
         elif STATE == ON:
             onstate(cf)
-            # print('ONSTATE')
+            print('ONSTATE')
         elif STATE == ASCEND:
             ascendstate(cf)
-            # print('ASCENDSTATE')
+            print('ASCENDSTATE')
         elif STATE == LAND:
             descendstate(cf)
-            # print('DESCENDSTATE')
+            print('DESCENDSTATE')
         else:
-            # print('ERRORSTATE')
+            print('ERRORSTATE')
             errorstate()
 
         # convert to next state
