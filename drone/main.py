@@ -41,10 +41,9 @@ def update_vars(new_vars: dict):
     for key in new_vars:
         bt_vars[key] = new_vars[key]
 
-def is_valid(var_name: str):
-    """Returns true if variable is valid (e.g. Ax, Ay, etc)."""
-    shift_bit = sigs.shifts[var_name]
-    return (bt_vars['valid'] & shift_bit) != 0
+def is_valid():
+    """Returns true if bluetooth signals can be used"""
+    return bt_vars['valid'] == sigs.ALLVALID
 
 def obtain_values_from_bt():
     """obtains new updated values from bluetooth_sigs python process."""
@@ -56,7 +55,7 @@ def obtain_values_from_bt():
     for line in p.stdout:
         obj = json.loads(line.decode())
         update_vars(obj)
-        # print(bt_vars)
+        print(bt_vars)
 
 
 # state functions
@@ -71,7 +70,9 @@ def offstate(cf: Crazyflie):
     #     NEXTSTATE = ASCEND
     """
     # Glove Interface
-    if handshape() == ASCEND:
+    if not is_valid():
+        NEXTSTATE = OFF
+    elif handshape() == ASCEND:
         NEXTSTATE = ASCEND
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
