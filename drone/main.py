@@ -63,7 +63,7 @@ def obtain_values_from_bt():
         obj = json.loads(line.decode())
         update_vars(obj)
         HAND_SIG = (bt_vars['f0'] << 0) | (bt_vars['f1'] << 1) | (bt_vars['f2'] << 2) | (bt_vars['f3'] << 3)
-        print(bt_vars, handshape_str(), bin(HAND_SIG))
+        # print(bt_vars, handshape_str(), bin(HAND_SIG))
 
 
 # state functions
@@ -83,7 +83,7 @@ def offstate(cf: Crazyflie):
     elif handshape() == ASCEND:
         NEXTSTATE = ASCEND
     elif handshape() == UNDEFINED:
-        NEXTSTATE = UNDEFINED
+        NEXTSTATE = STATE
     else:
         NEXTSTATE = OFF
 
@@ -103,7 +103,7 @@ def onstate(cf: Crazyflie):
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
     elif handshape() == UNDEFINED:
-        NEXTSTATE = UNDEFINED
+        NEXTSTATE = STATE
     else:
         NEXTSTATE = OFF
         return
@@ -136,7 +136,7 @@ def onstate(cf: Crazyflie):
     if bt_vars["Ax"] == 1:
         r += 15
 
-    thrust = 37500
+    thrust = 37000
 
     # print(f'{r:.2f} {p:.2f} {y:.2f}')
     cf.commander.send_setpoint(r, p, y, thrust)
@@ -164,13 +164,13 @@ def ascendstate(cf: Crazyflie):
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
     elif handshape() == UNDEFINED:
-        NEXTSTATE = UNDEFINED
+        NEXTSTATE = STATE
     else:
         NEXTSTATE = OFF
         return
 
     r, p, y = 0, 0, 0
-    thrust = 38000
+    thrust = 42000
     cf.commander.send_setpoint(r, p, y, thrust)
 
 
@@ -187,7 +187,7 @@ def descendstate(cf: Crazyflie):
     elif handshape() == DESCEND:
         NEXTSTATE = DESCEND
     elif handshape() == UNDEFINED:
-        NEXTSTATE = UNDEFINED
+        NEXTSTATE = STATE
     else:
         NEXTSTATE = OFF
         return
@@ -202,7 +202,7 @@ def descendstate(cf: Crazyflie):
     """
 
     r, p, y = 0, 0, 0
-    thrust = 32500
+    thrust = 33500
     cf.param.set_value("flightmode.althold", "False")
     cf.commander.send_setpoint(r, p, y, thrust)
 
@@ -276,15 +276,14 @@ def handshape():
         return OFF
     elif HAND_SIG == 0b0011:
         return ASCEND
-    elif HAND_SIG == 0b1111:
+    elif HAND_SIG == 0b1111 or HAND_SIG == 0b0111:
         return ON
     elif HAND_SIG == 0b0001:
         return DESCEND
     # elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
     #     return CIRCLE
     else:
-        # return UNDEFINED
-        return OFF
+        return UNDEFINED
 
 
 def handshape_str():
@@ -310,22 +309,20 @@ def command(cf: Crazyflie):
 
     while True:
         # executes function based on state.
-        print(bt_vars)
-
         if STATE == OFF:
             offstate(cf)
-            print('OFFSTATE')
+            print(bt_vars, 'OFFSTATE')
         elif STATE == ON:
             onstate(cf)
-            print('ONSTATE')
+            print(bt_vars, 'ONSTATE')
         elif STATE == ASCEND:
             ascendstate(cf)
-            print('ASCENDSTATE')
+            print(bt_vars, 'ASCENDSTATE')
         elif STATE == DESCEND:
             descendstate(cf)
-            print('DESCENDSTATE')
+            print(bt_vars, 'DESCENDSTATE')
         else:
-            print('ERRORSTATE')
+            print(bt_vars, 'ERRORSTATE')
             errorstate()
 
         # convert to next state

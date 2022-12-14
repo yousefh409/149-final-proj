@@ -79,7 +79,7 @@ def flex2(_, data):
 def flex3(_, data):
     vars['valid'] |= F3_SHIFT
     data = int.from_bytes(data, "little", signed=True)
-    vars['f3'] = data > (280 + 80) // 2
+    vars['f3'] = data > (358 + 130) // 2
 
 async def bluetooth(address):
     async with BleakClient(address) as client:
