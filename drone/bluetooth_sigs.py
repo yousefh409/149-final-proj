@@ -61,25 +61,25 @@ def accelz(_, data):
 def flex0(_, data):
     vars['valid'] |= F0_SHIFT
     data = int.from_bytes(data, "little", signed=True)
-    vars['f0'] = (data < (760 + 460) // 2)
+    vars['f0'] = data > (760 + 460) // 2
 
 # 620 - 140
 def flex1(_, data):
     vars['valid'] |= F1_SHIFT
     data = int.from_bytes(data, "little", signed=True)
-    vars['f1'] = data < (620 + 140) // 2
+    vars['f1'] = data > (620 + 140) // 2
 
 # 380 - 80
 def flex2(_, data):
     vars['valid'] |= F2_SHIFT
     data = int.from_bytes(data, "little", signed=True)
-    vars['f2'] = data < (380 + 80) // 2
+    vars['f2'] = data > (380 + 80) // 2
 
 # 280 - 80
 def flex3(_, data):
     vars['valid'] |= F3_SHIFT
     data = int.from_bytes(data, "little", signed=True)
-    vars['f3'] = data < (280 + 80) // 2
+    vars['f3'] = data > (280 + 80) // 2
 
 async def bluetooth(address):
     async with BleakClient(address) as client:

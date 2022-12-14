@@ -17,19 +17,23 @@ from bluetooth_sigs import vars as bt_vars
 from subprocess import Popen, PIPE, STDOUT
 import json
 
-# predefined states
-OFF = 0
-ON = 1
-ASCEND = 2
-LAND = 3
+# predefined states for keyboard
+# OFF = 0
+# ON = 1
+# ASCEND = 2
+# LAND = 3
 # MOVE = 4
 
 # hand states
-ASCEND = 1
-DESCEND = 2
-CIRCLE = 3
-CHACHA = 4
-UNDEFINED = 9
+OFF       = 0
+ON        = 1
+ASCEND    = 2
+DESCEND   = 3
+CIRCLE    = 4
+CHACHA    = 5
+UNDEFINED = 6
+
+HAND_SIG = 0
 
 # current state
 STATE = OFF
@@ -46,6 +50,8 @@ def is_valid():
 
 def obtain_values_from_bt():
     """obtains new updated values from bluetooth_sigs python process."""
+    global HAND_SIG
+
     p = Popen('python bluetooth_sigs.py'.split(), stdin=PIPE, stdout=PIPE, stderr=STDOUT)
     if p.stdout is None:
         print('Unable to open STDOUT for bluetooth')
@@ -56,7 +62,8 @@ def obtain_values_from_bt():
             continue
         obj = json.loads(line.decode())
         update_vars(obj)
-        # print(bt_vars, handshape_str())
+        HAND_SIG = (bt_vars['f0'] << 0) | (bt_vars['f1'] << 1) | (bt_vars['f2'] << 2) | (bt_vars['f3'] << 3)
+        print(bt_vars, handshape_str(), bin(HAND_SIG))
 
 
 # state functions
@@ -77,8 +84,6 @@ def offstate(cf: Crazyflie):
         NEXTSTATE = ASCEND
     elif handshape() == UNDEFINED:
         NEXTSTATE = UNDEFINED
-    elif handshape() == ON:
-        NEXTSTATE = ON
     else:
         NEXTSTATE = OFF
 
@@ -267,14 +272,16 @@ def errorstate():
 
 def handshape():
     # States based only on the flex sensors
-    if   not bt_vars['f0'] and not bt_vars['f1'] and not bt_vars['f2'] and not bt_vars['f3']:
-        return ON
-    elif not bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
+    if HAND_SIG == 0b0000:
+        return OFF
+    elif HAND_SIG == 0b0011:
         return ASCEND
-    elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
+    elif HAND_SIG == 0b1111:
+        return ON
+    elif HAND_SIG == 0b0001:
         return DESCEND
-    elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
-        return CIRCLE
+    # elif bt_vars['f0'] and bt_vars['f1'] and bt_vars['f2'] and bt_vars['f3']:
+    #     return CIRCLE
     else:
         # return UNDEFINED
         return OFF
@@ -314,7 +321,7 @@ def command(cf: Crazyflie):
         elif STATE == ASCEND:
             ascendstate(cf)
             print('ASCENDSTATE')
-        elif STATE == LAND:
+        elif STATE == DESCEND:
             descendstate(cf)
             print('DESCENDSTATE')
         else:
