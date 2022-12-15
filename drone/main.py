@@ -4,6 +4,7 @@ import time
 # import keyboard
 import numpy as np
 import threading
+import sys
 
 # from pygame import mixer
 
@@ -39,6 +40,10 @@ HAND_SIG = 0
 STATE = OFF
 NEXTSTATE = OFF
 
+# other constant variables
+MAX_VEL = 0.2 # 0.2 m/s
+
+
 def update_vars(new_vars: dict):
     """Updates the current variables obtained from bluetooth to the new ones received."""
     for key in new_vars:
@@ -48,7 +53,7 @@ def is_valid():
     """Returns true if bluetooth signals can be used"""
     return bt_vars['valid'] == sigs.ALLVALID
 
-def obtain_values_from_bt():
+def obtain_values_from_bt(only_bluetooth=False):
     """obtains new updated values from bluetooth_sigs python process."""
     global HAND_SIG
 
@@ -63,7 +68,8 @@ def obtain_values_from_bt():
         obj = json.loads(line.decode())
         update_vars(obj)
         HAND_SIG = (bt_vars['f0'] << 0) | (bt_vars['f1'] << 1) | (bt_vars['f2'] << 2) | (bt_vars['f3'] << 3)
-        # print(bt_vars, handshape_str(), bin(HAND_SIG))
+        if only_bluetooth:
+            print(bt_vars, handshape_str(), bin(HAND_SIG))
 
 
 # state functions
@@ -136,12 +142,18 @@ def onstate(cf: Crazyflie):
     if bt_vars["Ax"] == 1:
         r += 15
 
-    thrust = 37000
-
+    # thrust = 37000
     # print(f'{r:.2f} {p:.2f} {y:.2f}')
-    cf.commander.send_setpoint(r, p, y, thrust)
-    cf.param.set_value("flightmode.althold", "True")
+    # cf.commander.send_setpoint(r, p, y, thrust)
+    # cf.param.set_value("flightmode.althold", "True")
     # commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
+    # switch to using vx, vy, vz, yaw instead.
+    vx = MAX_VEL * np.sin(np.deg2rad(r))
+    vy = MAX_VEL * np.cos(np.deg2rad(p))
+    vz = 0.0
+    yawrate = 0.0
+    cf.commander.send_velocity_world_setpoint(vx, vy, vz, yawrate)
+
 
 def ascendstate(cf: Crazyflie):
     global NEXTSTATE
@@ -169,9 +181,10 @@ def ascendstate(cf: Crazyflie):
         NEXTSTATE = OFF
         return
 
-    r, p, y = 0, 0, 0
-    thrust = 42000
-    cf.commander.send_setpoint(r, p, y, thrust)
+    # r, p, y = 0, 0, 0
+    # thrust = 42000
+    # cf.commander.send_setpoint(r, p, y, thrust)
+    cf.commander.send_velocity_world_setpoint(0.0, 0.0, MAX_VEL, 0.0)
 
 
 def descendstate(cf: Crazyflie):
@@ -201,10 +214,11 @@ def descendstate(cf: Crazyflie):
         return
     """
 
-    r, p, y = 0, 0, 0
-    thrust = 33500
-    cf.param.set_value("flightmode.althold", "False")
-    cf.commander.send_setpoint(r, p, y, thrust)
+    # r, p, y = 0, 0, 0
+    # thrust = 33500
+    # cf.param.set_value("flightmode.althold", "False")
+    # cf.commander.send_setpoint(r, p, y, thrust)
+    cf.commander.send_velocity_world_setpoint(0.0, 0.0, -0.5*MAX_VEL, 0.0)
 
 # def chachastate(cf: Crazyflie):
 #     thrust = 37500
@@ -342,8 +356,12 @@ def initdrone():
 
 
 if __name__ == '__main__':
-    drone = threading.Thread(target=initdrone)
-    drone.start()
+    # used for debugging bluetooth connection. Add 'bluetooth' to program arguments.
+    only_bluetooth = len(sys.argv) > 1 and sys.argv[1] == 'bluetooth'
+
+    if not only_bluetooth:
+        drone = threading.Thread(target=initdrone)
+        drone.start()
 
     # receive inputs from bluetooth
-    obtain_values_from_bt()
+    obtain_values_from_bt(only_bluetooth)
