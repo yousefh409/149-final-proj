@@ -149,7 +149,7 @@ def onstate(cf: Crazyflie):
     # commander.send_velocity_world_setpoint(0, 0, 0, 0.0)
     # switch to using vx, vy, vz, yaw instead.
     vx = MAX_VEL * np.sin(np.deg2rad(r))
-    vy = MAX_VEL * np.cos(np.deg2rad(p))
+    vy = MAX_VEL * np.sin(np.deg2rad(p))
     vz = 0.0
     yawrate = 0.0
     cf.commander.send_velocity_world_setpoint(vx, vy, vz, yawrate)
