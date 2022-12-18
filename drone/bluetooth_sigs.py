@@ -110,7 +110,7 @@ async def bluetooth(address):
 
 def initbluetooth():
     # initialize bluetooth async
-    address = "68:a2:25:0d:75:60"
+    address = "10:EF:F3:31:2B:07"
     asyncio.run(bluetooth(address))
 
 if __name__ == '__main__':

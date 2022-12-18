@@ -28,7 +28,7 @@ BLEIntCharacteristic accelz("aaa3", BLERead | BLENotify);
 void setup() {
   Serial.begin(9600);    // initialize serial communication
   pinMode(LED_BUILTIN, OUTPUT); // initialize the built-in LED pin
-  while (!Serial);
+  // while (!Serial);
 
   Wire.begin();
   if (!compass.init()) {
