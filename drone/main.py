@@ -157,6 +157,11 @@ def onstate(cf: Crazyflie):
     # cf.commander.send_velocity_world_setpoint(vx, vy, vz, yawrate)
     cf.commander.send_setpoint(r, p, y, thrust)
     cf.param.set_value("flightmode.althold", "True")
+    vx = MAX_VEL * np.sin(np.deg2rad(r))
+    vy = MAX_VEL * np.sin(np.deg2rad(p))
+    vz = 0.0
+    yawrate = 0.0
+    cf.commander.send_velocity_world_setpoint(vx, vy, vz, yawrate)
 
 
 def ascendstate(cf: Crazyflie):
